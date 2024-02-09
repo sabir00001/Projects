@@ -47,7 +47,7 @@ stages:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'aks-rg-connection'
         azureContainerRegistry: '{"loginServer":"akspractice01.azurecr.io", "id" : "/subscriptions/410c1a95-68f7-4b30-9fdc-964a1658482d/resourceGroups/AKS-Practice/providers/Microsoft.ContainerRegistry/registries/akspractice01"}'
-        dockerComposeFile: '**/docker-compose.yml'
+        dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Push services'
         includeSourceTags: true
