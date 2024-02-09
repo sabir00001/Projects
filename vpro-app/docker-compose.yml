@@ -1,7 +1,7 @@
 version: '3.8'
 services: 
   vprodb:
-    image: sabirchoudhury001/vprofiledb
+    image: vprofiledb
     container_name: vprodb
     build: 
       context: ./Docker-files/db
@@ -28,7 +28,7 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
 
   vproapp:
-    image: sabirchoudhury001/vprofileapp
+    image: vprofileapp
     container_name: vproapp
     build:
       context: ./Docker-files/app
@@ -39,7 +39,7 @@ services:
       - 8080:8080
 
   vproweb:
-    image: sabirchoudhury001/vprofileweb
+    image: vprofileweb
     container_name: vproweb
     build:
       context: ./Docker-files/web
