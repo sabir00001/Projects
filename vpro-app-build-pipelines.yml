@@ -13,7 +13,7 @@ variables:
   dockerRegistryServiceConnection: 'db0d59bf-ac7d-4d67-8257-3eebc230bc55'
   imageRepository: 'vproapp'
   containerRegistry: 'akspractice01.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/vpro-app /docker-compose.yaml'
+  dockerfilePath: '$(Build.SourcesDirectory)/vpro-app /'
   tag: '$(Build.BuildId)'
 
    # Agent VM image name
