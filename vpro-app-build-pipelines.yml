@@ -31,8 +31,8 @@ stages:
     - task: CmdLine@2
       inputs:
         script: |
-          cd .\vpro-app\Code\ && mvn install
-        workingDirectory: '$(Build.SourcesDirectory)'
+          mvn install
+        workingDirectory: '$(Build.SourcesDirectory)\vpro-app\Code'
     - task: DockerCompose@0
       inputs:
         containerregistrytype: 'Azure Container Registry'
