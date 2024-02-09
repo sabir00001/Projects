@@ -32,7 +32,7 @@ stages:
       inputs:
         script: |
           mvn install
-        workingDirectory: '$(Build.SourcesDirectory)\vpro-app\Code'
+        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
     - task: DockerCompose@0
       inputs:
         containerregistrytype: 'Azure Container Registry'
