@@ -29,11 +29,20 @@ stages:
       name: $(Name)
     steps:
     - task: CmdLine@2
+      displayName: 'MVN Build'
       inputs:
         script: |
           mvn install
         workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
+    - task: CmdLine@2
+      displayName: 'MVN Test'
+      inputs:
+        script: |
+          mvn test && 
+          mvn checkstyle:checkstyle
+        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
     - task: DockerCompose@0
+      displayName: 'DockerCompose-build'
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'aks-rg-connection'
@@ -43,6 +52,7 @@ stages:
         action: 'Build services'
         includeSourceTags: true
     - task: DockerCompose@0
+      displayName: 'DockerCompose-push'
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'aks-rg-connection'
