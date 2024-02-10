@@ -44,6 +44,7 @@ stages:
         script: |
           mvn test && 
           mvn checkstyle:checkstyle
+        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
     - task: SonarQubeAnalyze@5
       inputs:
         jdkversion: 'JAVA_HOME_11_X64'
