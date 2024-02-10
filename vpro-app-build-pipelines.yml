@@ -45,6 +45,19 @@ stages:
           mvn test && 
           mvn checkstyle:checkstyle
         workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
+    - task: Maven@4
+      inputs:
+        mavenPomFile: '$(Build.SourcesDirectory)/vpro-app/Code/pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        testRunTitle: 'Maven-Unit-Test'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: true
+        sqMavenPluginVersionChoice: 'latest'
+        checkStyleRunAnalysis: true
     - task: SonarQubeAnalyze@5
       inputs:
         jdkversion: 'JAVA_HOME_11_X64'
