@@ -28,19 +28,28 @@ stages:
     pool:
       name: $(Name)
     steps:
+    - task: SonarQubePrepare@5
+      inputs:
+        SonarQube: 'Sonar-Connection'
+        scannerMode: 'Other'
     - task: CmdLine@2
       displayName: 'MVN Build'
       inputs:
         script: |
           mvn install
-        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
+        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'     
     - task: CmdLine@2
       displayName: 'MVN Test'
       inputs:
         script: |
           mvn test && 
           mvn checkstyle:checkstyle
-        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
+    - task: SonarQubeAnalyze@5
+      inputs:
+        jdkversion: 'JAVA_HOME_11_X64'
+    - task: SonarQubePublish@5
+      inputs:
+        pollingTimeoutSec: '300'
     - task: DockerCompose@0
       displayName: 'DockerCompose-build'
       inputs:
