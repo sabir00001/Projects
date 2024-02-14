@@ -9,11 +9,6 @@ resources:
 - repo: self
 
 variables:
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'db0d59bf-ac7d-4d67-8257-3eebc230bc55'
-  imageRepository: 'vproapp'
-  containerRegistry: 'aksprodacr.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/vpro-app/docker-compose.yaml'
   tag: '$(Build.BuildId)'
 
    # Agent VM image name
