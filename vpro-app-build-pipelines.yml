@@ -29,6 +29,7 @@ stages:
       name: $(Name)
     steps:
     - task: SonarQubePrepare@5
+      condition: false
       inputs:
         SonarQube: 'Sonar-Connection'
         scannerMode: 'Other'
