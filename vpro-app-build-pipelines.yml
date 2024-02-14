@@ -72,20 +72,18 @@ stages:
     - task: DockerCompose@0
       displayName: 'DockerCompose-build'
       inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'aks-rg-connection'
-        azureContainerRegistry: '$(containerRegistry)'
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'acr-connection'
         dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Build services'
+        additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-        additionalImageTags: $(Build.BuildId)
     - task: DockerCompose@0
       displayName: 'DockerCompose-push'
       inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'aks-rg-connection'
-        azureContainerRegistry: '{"loginServer":"aksprodacr.azurecr.io", "id" : "/subscriptions/410c1a95-68f7-4b30-9fdc-964a1658482d/resourceGroups/AKS-Practice/providers/Microsoft.ContainerRegistry/registries/akspractice01"}'
+        containerregistrytype: 'Container Registry'
+        dockerRegistryEndpoint: 'acr-connection'
         dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Push services'
