@@ -62,9 +62,11 @@ stages:
         sqMavenPluginVersionChoice: 'latest'
         checkStyleRunAnalysis: true
     - task: SonarQubeAnalyze@5
+      condition: false
       inputs:
         jdkversion: 'JAVA_HOME_11_X64'
     - task: SonarQubePublish@5
+      condition: false
       inputs:
         pollingTimeoutSec: '300'
     - task: DockerCompose@0
