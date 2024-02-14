@@ -1,0 +1,71 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- develop
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'db0d59bf-ac7d-4d67-8257-3eebc230bc55'
+  imageRepository: 'vproapp'
+  containerRegistry: 'aksprodacr.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/vpro-app/docker-compose.yaml'
+  tag: '$(Build.BuildId)'
+
+   # Agent VM image name
+  Name: devops-agent-01
+
+stages:
+- stage: Build
+  displayName: 'cluster-creaton'
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      name: $(Name)
+    steps:
+  
+    - task: AzureCLI@2
+      displayName: 'Create aks-prod-rg'
+      inputs:
+        azureSubscription: 'aks-rg-connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'az group create --name aks-prod-rg --location eastus'
+    - task: AzureCLI@2
+      displayName: 'Create aks-prod-cluster '
+      inputs:
+        azureSubscription: 'aks-rg-connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks create --resource-group aks-prod-rg --name aks-prod-cluster --node-count 2 --node-vm-size Standard_DS2_v2 \
+                                --enable-addons monitoring --generate-ssh-keys \
+                                --network-plugin azure --service-cidr 10.1.0.0/16 --dns-service-ip 10.1.0.10 --docker-bridge-address 172.17.0.1/16 \
+                                --location eastus
+    - task: AzureCLI@2
+      displayName: 'Adding update helm Repo'
+      inputs:
+        azureSubscription: 'aks-rg-connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: 'helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update'
+    
+    - task: AzureCLI@2
+      displayName: 'Install Ingress Controller'
+      inputs:
+        azureSubscription: 'aks-rg-connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          helm install ingress-nginx ingress-nginx/ingress-nginx \
+              --namespace ingress-basic \
+              --set controller.replicaCount=2 \
+              --set controller.nodeSelector."kubernetes\.io/os"=linux \
+              --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
+              --set controller.service.externalTrafficPolicy=Local \
+              --set controller.service.loadBalancerIP="13.90.150.49"
