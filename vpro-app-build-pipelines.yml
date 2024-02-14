@@ -34,19 +34,21 @@ stages:
         SonarQube: 'Sonar-Connection'
         scannerMode: 'Other'
     - task: CmdLine@2
-      displayName: 'MVN Build'
+      displayName: 'Vpro Build'
       inputs:
         script: |
           mvn install
         workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'     
     - task: CmdLine@2
-      displayName: 'MVN Test'
+      displayName: 'Vpro Test'
       inputs:
         script: |
           mvn test && 
           mvn checkstyle:checkstyle
         workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
     - task: Maven@4
+      displayName: 'MVN Sonar-Analyis'
+      condition: false
       inputs:
         mavenPomFile: '$(Build.SourcesDirectory)/vpro-app/Code/pom.xml'
         publishJUnitResults: true
