@@ -38,7 +38,7 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az aks create --resource-group aks-prod-rg --name aks-prod-cluster --node-count 2 --node-vm-size Standard_DS2_v2 \
+          az aks create --resource-group aks-prod-rg --name aks-prod-cluster --node-count 1 --node-vm-size Standard_DS2_v2 \
                                 --enable-addons monitoring --generate-ssh-keys \
                                 --network-plugin azure --service-cidr 10.1.0.0/16 --dns-service-ip 10.1.0.10 --docker-bridge-address 172.17.0.1/16 \
                                 --location eastus
