@@ -12,7 +12,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'db0d59bf-ac7d-4d67-8257-3eebc230bc55'
   imageRepository: 'vproapp'
-  containerRegistry: 'akspractice01.azurecr.io'
+  containerRegistry: 'aksprodacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/vpro-app/docker-compose.yaml'
   tag: '$(Build.BuildId)'
 
@@ -70,7 +70,7 @@ stages:
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'aks-rg-connection'
-        azureContainerRegistry: 'akspractice01.azurecr.io'
+        azureContainerRegistry: '$(containerRegistry)'
         dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Build services'
@@ -81,9 +81,9 @@ stages:
       inputs:
         containerregistrytype: 'Azure Container Registry'
         azureSubscription: 'aks-rg-connection'
-        azureContainerRegistry: '{"loginServer":"akspractice01.azurecr.io", "id" : "/subscriptions/410c1a95-68f7-4b30-9fdc-964a1658482d/resourceGroups/AKS-Practice/providers/Microsoft.ContainerRegistry/registries/akspractice01"}'
+        azureContainerRegistry: '{"loginServer":"aksprodacr.azurecr.io", "id" : "/subscriptions/410c1a95-68f7-4b30-9fdc-964a1658482d/resourceGroups/AKS-Practice/providers/Microsoft.ContainerRegistry/registries/akspractice01"}'
         dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Push services'
+        additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-        additionalImageTags: $(Build.BuildId)
