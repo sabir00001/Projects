@@ -74,6 +74,7 @@ stages:
         projectName: 'vpro-app'
         action: 'Build services'
         includeSourceTags: true
+        additionalImageTags: $(Build.BuildId)
     - task: DockerCompose@0
       displayName: 'DockerCompose-push'
       inputs:
@@ -84,3 +85,4 @@ stages:
         projectName: 'vpro-app'
         action: 'Push services'
         includeSourceTags: true
+        additionalImageTags: $(Build.BuildId)
