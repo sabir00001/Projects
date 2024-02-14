@@ -27,14 +27,14 @@ stages:
     - task: AzureCLI@2
       displayName: 'Create aks-prod-rg'
       inputs:
-        azureSubscription: 'aks-rg-connection'
+        azureSubscription: 'Free Trial(410c1a95-68f7-4b30-9fdc-964a1658482d)'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: 'az group create --name aks-prod-rg --location eastus'
     - task: AzureCLI@2
       displayName: 'Create aks-prod-cluster '
       inputs:
-        azureSubscription: 'aks-rg-connection'
+        azureSubscription: 'Free Trial(410c1a95-68f7-4b30-9fdc-964a1658482d)'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
@@ -45,7 +45,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Adding update helm Repo'
       inputs:
-        azureSubscription: 'aks-rg-connection'
+        azureSubscription: 'Free Trial(410c1a95-68f7-4b30-9fdc-964a1658482d)'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: 'helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx && helm repo update'
@@ -53,7 +53,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Install Ingress Controller'
       inputs:
-        azureSubscription: 'aks-rg-connection'
+        azureSubscription: 'Free Trial(410c1a95-68f7-4b30-9fdc-964a1658482d)'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
