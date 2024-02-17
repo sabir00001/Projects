@@ -1,51 +1,48 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vprodb-deployment
-  namespace: 
+  name: emartdb-deployment
+  namespace: emart-dev
   labels:
-    app: vprodb
+    app: emartdb
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: vprodb
+      app: emartdb
   template:
     metadata:
       labels:
-        app: vprodb
+        app: emartdb
     spec:
       containers:
-      - name: vprodb
-        image: akspractice01.azurecr.io/vprofiledb
+      - name: emartdb
+        image: mysql:8.0.33
         ports:
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: vpro-secrets
+              name: emart-secrets
               key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
-          value: accounts  
-        volumeMounts:
-        - name: vpro-db-pvc
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: vpro-db-pvc
-        persistentVolumeClaim:
-          claimName: azure-managed-disk-pvc
+          valueFrom:
+            secretKeyRef:
+              name: emart-secrets
+              key: MYSQL_DATABASE 
+
        
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: vprodb
-  namespace: 
+  name: emartdb
+  namespace: emart-dev
 spec:
   type: ClusterIP
   selector:
-    app: vprodb
+    app: emartdb
   ports:
     - protocol: TCP
       port: 3306

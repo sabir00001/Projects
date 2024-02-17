@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginxapp1-ingress-service
+  namespace: emart-dev
+  annotations:
+    #kubernetes.io/ingress.class: nginx  
+    cert-manager.io/cluster-issuer: letsencrypt
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: app.sabirch.shop
+      http:
+        paths:
+          - path: /webapi
+            pathType: Prefix
+            backend:
+              service:
+                name: webapi
+                port: 
+                  number: 9000
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port: 
+                  number: 5000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: client
+                port: 
+                  number: 4200
+  tls:
+  - hosts:
+    - app.sabirch.shop
+    secretName: app1-sabirch-secret
+                

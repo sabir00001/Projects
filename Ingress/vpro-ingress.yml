@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: 
+  namespace: vpro-dev
+  #annotations:
+    #kubernetes.io/ingress.class: nginx  
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /login
+            pathType: Prefix
+            backend:
+              service:
+                name: vproapp
+                port: 
+                  number: 80
+      

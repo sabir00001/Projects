@@ -1,0 +1,203 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  vpro-dev
+  labels:
+    name:  vpro-dev
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: vpro-secrets
+  namespace: vpro-dev
+type: Opaque
+data:
+  MYSQL_ROOT_PASSWORD: YWRtaW4xMjM=
+  RABBITMQ_DEFAULT_PASS: Z3Vlc3Q=
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vprodb-deployment
+  namespace: vpro-dev
+  labels:
+    app: vprodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vprodb
+  template:
+    metadata:
+      labels:
+        app: vprodb
+    spec:
+      containers:
+      - name: vprodb
+        image: akspractice01.azurecr.io/vprofiledb
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vpro-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          value: accounts  
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vprodb
+  namespace: vpro-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: vprodb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memched-deployment
+  namespace: vpro-dev
+  labels:
+    app: vprocache01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vprocache01
+  template:
+    metadata:
+      labels:
+        app: vprocache01
+    spec:
+      containers:
+      - name: vprocache01
+        image: memcached
+        ports:
+        - containerPort: 11211
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vprocache01
+  namespace: vpro-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: vprocache01
+  ports:
+    - protocol: TCP
+      port: 11211
+      targetPort: 11211
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rebittmq-deployment
+  namespace: vpro-dev
+  labels:
+    app: vpromq01
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vpromq01
+  template:
+    metadata:
+      labels:
+        app: vpromq01
+    spec:
+      containers:
+      - name: vpromq01
+        image: rabbitmq
+        ports:
+        - containerPort: 15672
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: guest
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: vpro-secrets
+              key: RABBITMQ_DEFAULT_PASS
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vpromq01
+  namespace: vpro-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: vpromq01
+  ports:
+    - protocol: TCP
+      port: 15672
+      targetPort: 15672
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vproapp-deployment
+  namespace: vpro-dev
+  labels:
+    app: vproapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vproapp
+  template:
+    metadata:
+      labels:
+        app: vproapp
+    spec:
+      containers:
+      - name: vproapp
+        image: akspractice01.azurecr.io/vprofileapp
+        ports:
+        - name: vproapp-port
+          containerPort: 8080
+          hostPort: 8080
+        readinessProbe:
+          httpGet:
+            path: /index
+            port: vproapp-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+      initContainers:
+      - name: init-myservice
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup vprodb; do echo waiting for mysqldb; sleep 2; done"]
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vproapp
+  namespace: vpro-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: vproapp
+  ports:
+    - protocol: TCP
+      port: 8080
+      
+
