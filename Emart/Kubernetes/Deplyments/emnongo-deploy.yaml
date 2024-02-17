@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emongo-deployment
+  namespace: emart-dev
+  labels:
+    app: emongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emongo
+  template:
+    metadata:
+      labels:
+        app: emongo
+    spec:
+      containers:
+      - name: emongo
+        image: mongo:4
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name:  emart-secrets
+              key: MONGO_INITDB_DATABASE
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: emongo
+  namespace: emart-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: emongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+

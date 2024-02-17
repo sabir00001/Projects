@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+  namespace: emart-dev
+  labels:
+    app: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client
+        image: akspractice01.azurecr.io/emartapp_client
+        ports:
+        - name: client-port
+          containerPort: 4200
+          hostPort: 4200
+        readinessProbe:
+          httpGet:
+            path: /
+            port: client-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+      initContainers:
+      - name: init-myservice
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup api; do echo waiting for api; sleep 2; done"]
+      
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client
+  namespace: emart-dev
+spec:
+  type: LoadBalancer
+  selector:
+    app: client
+  ports:
+    - protocol: TCP
+      port: 90
+      targetPort: 4200
+      

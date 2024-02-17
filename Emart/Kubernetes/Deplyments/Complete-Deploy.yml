@@ -1,0 +1,245 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: emart-dev
+  labels:
+    name: emart-dev
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: emart-secrets
+  namespace: emart-dev
+type: Opaque
+data:
+  MYSQL_ROOT_PASSWORD: ZW1hcnRkYnBhc3M=
+  MYSQL_DATABASE: Ym9va3M=
+  MONGO_INITDB_DATABASE: ZXBvYw==
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emongo-deployment
+  namespace: emart-dev
+  labels:
+    app: emongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emongo
+  template:
+    metadata:
+      labels:
+        app: emongo
+    spec:
+      containers:
+      - name: emongo
+        image: mongo:4
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name:  emart-secrets
+              key: MONGO_INITDB_DATABASE
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: emongo
+  namespace: emart-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: emongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emartdb-deployment
+  namespace: emart-dev
+  labels:
+    app: emartdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emartdb
+  template:
+    metadata:
+      labels:
+        app: emartdb
+    spec:
+      containers:
+      - name: emartdb
+        image: mysql:8.0.33
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: emart-secrets
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: emart-secrets
+              key: MYSQL_DATABASE 
+
+       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emartdb
+  namespace: emart-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: emartdb
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapi-deployment
+  namespace: emart-dev
+  labels:
+    app: webapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapi
+  template:
+    metadata:
+      labels:
+        app: webapi
+    spec:
+      containers:
+      - name: webapi
+        image: aksprodacr.azurecr.io/emartapp_webapi
+        ports:
+        - containerPort: 9000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapi
+  namespace: emart-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: webapi
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: emart-dev
+  labels:
+    app: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api
+        image: aksprodacr.azurecr.io/emartapp_api
+        ports:
+        - containerPort: 5000
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: emart-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: api
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+  namespace: emart-dev
+  labels:
+    app: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - name: client
+        image: aksprodacr.azurecr.io/emartapp_client
+        ports:
+        - name: client-port
+          containerPort: 4200
+          hostPort: 4200
+        readinessProbe:
+          httpGet:
+            path: /
+            port: client-port
+          initialDelaySeconds: 15
+          periodSeconds: 10
+      initContainers:
+      - name: init-myservice
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup api; do echo waiting for api; sleep 2; done"]
+      
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client
+  namespace: emart-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: client
+  ports:
+    - protocol: TCP
+      port: 4200
+      targetPort: 4200
+      
