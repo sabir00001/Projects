@@ -20,7 +20,7 @@ variables:
   Name: devops-agent-01
 
 stages:
-- stage: Appl Build
+- stage: App_Build
   displayName: 'Vpro_App_Build'
   jobs:
   - job: Build
@@ -69,7 +69,7 @@ stages:
       condition: false
       inputs:
         pollingTimeoutSec: '300'
-- stage: Docker Build
+- stage: Docker_Build
   displayName: 'Docker Build'
   jobs:
   - job: Build
