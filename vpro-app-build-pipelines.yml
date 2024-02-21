@@ -21,7 +21,7 @@ variables:
 
 stages:
 - stage: Appl Build
-  displayName: 'Vpro-App-Build'
+  displayName: 'Vpro_App_Build'
   jobs:
   - job: Build
     displayName: Build
