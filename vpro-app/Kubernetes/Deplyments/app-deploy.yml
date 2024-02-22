@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: vproapp
-        image: akspractice01.azurecr.io/vprofileapp
+        image: aksprodacr.azurecr.io/vprofileapp
         ports:
         - name: vproapp-port
           containerPort: 8080
