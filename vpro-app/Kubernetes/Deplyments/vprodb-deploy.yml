@@ -28,13 +28,13 @@ spec:
               key: MYSQL_ROOT_PASSWORD
         - name: MYSQL_DATABASE
           value: accounts  
-        volumeMounts:
-        - name: vpro-db-pvc
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: vpro-db-pvc
-        persistentVolumeClaim:
-          claimName: azure-managed-disk-pvc
+        #volumeMounts:
+        #- name: vpro-db-pvc
+          #mountPath: /var/lib/mysql
+      #volumes:
+      #- name: vpro-db-pvc
+        #persistentVolumeClaim:
+         # claimName: azure-managed-disk-pvc
        
 ---
 apiVersion: v1
