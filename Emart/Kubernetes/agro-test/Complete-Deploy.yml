@@ -26,7 +26,7 @@ metadata:
   labels:
     app: emongo
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: emongo
@@ -72,7 +72,7 @@ metadata:
   labels:
     app: emartdb
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: emartdb
@@ -122,7 +122,7 @@ metadata:
   labels:
     app: webapi
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: webapi
