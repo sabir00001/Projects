@@ -144,3 +144,8 @@ stages:
         action: 'Push services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
+    - task: owaspzap@1
+      inputs:
+        scantype: 'targetedScan'
+        url: 'www.goole.com'
+        port: '443'
