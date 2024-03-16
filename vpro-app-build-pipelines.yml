@@ -104,7 +104,7 @@ stages:
         action: 'Build services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-        dockerComposePath: '/usr/bin/docker-compose'
+
     - task: DockerCompose@0
       displayName: 'DockerCompose-push'
       inputs:
@@ -115,4 +115,3 @@ stages:
         action: 'Push services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-        dockerComposePath: '/usr/bin/docker-compose'
