@@ -43,8 +43,9 @@ stages:
       displayName: 'Vpro Build'
       inputs:
         script: |
+          '/opt/apache-maven-3.6.3/bin/mvn clean package'
           mvn install
-        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'     
+        workingDirectory: '$(Build.SourcesDirectory)/vpro-app/Code'
     - task: CmdLine@2
       displayName: 'Vpro Test'
       inputs:
