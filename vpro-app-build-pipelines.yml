@@ -71,11 +71,21 @@ stages:
       condition: false
       inputs:
         jdkversion: 'JAVA_HOME_11_X64'
-    
+    - task: SonarCloudAnalyze@1
+      inputs:
+        jdkversion: 'JAVA_HOME'
+ 
     - task: SonarQubePublish@5
       condition: false
       inputs:
         pollingTimeoutSec: '300'
+    
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
+    
+    
+
 - stage: Docker_Build
   displayName: 'Docker Build'
   jobs:
