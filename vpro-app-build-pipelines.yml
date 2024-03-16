@@ -147,5 +147,5 @@ stages:
     - task: owaspzap@1
       inputs:
         scantype: 'targetedScan'
-        url: 'https://goole.com'
+        url: 'https://google.com'
         port: '443'
