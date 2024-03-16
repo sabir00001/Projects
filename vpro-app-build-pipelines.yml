@@ -10,7 +10,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'db0d59bf-ac7d-4d67-8257-3eebc230bc55'
+  dockerRegistryServiceConnection: '9734dba5-b9e0-4249-9973-b3fb22b06d24'
   imageRepository: 'vproapp'
   containerRegistry: 'aksprodacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/vpro-app/docker-compose.yaml'
@@ -33,6 +33,12 @@ stages:
       inputs:
         SonarQube: 'Sonar-Connection'
         scannerMode: 'Other'
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'sonar-cloud'
+        organization: 'vrpoapp'
+        scannerMode: 'Other'
+
     - task: CmdLine@2
       displayName: 'Vpro Build'
       inputs:
@@ -65,6 +71,7 @@ stages:
       condition: false
       inputs:
         jdkversion: 'JAVA_HOME_11_X64'
+    
     - task: SonarQubePublish@5
       condition: false
       inputs:
@@ -81,7 +88,7 @@ stages:
       displayName: 'DockerCompose-build'
       inputs:
         containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'acr-connection'
+        dockerRegistryEndpoint: 'maf-dockerhub-connection'
         dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Build services'
@@ -91,7 +98,7 @@ stages:
       displayName: 'DockerCompose-push'
       inputs:
         containerregistrytype: 'Container Registry'
-        dockerRegistryEndpoint: 'acr-connection'
+        dockerRegistryEndpoint: 'maf-dockerhub-connection'
         dockerComposeFile: '$(dockerfilePath)'
         projectName: 'vpro-app'
         action: 'Push services'
