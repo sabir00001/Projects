@@ -106,6 +106,14 @@ stages:
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
 
+- stage: Docker_Push
+  displayName: 'Publish'
+  jobs:
+  - job: Build
+    displayName: publish
+    pool:
+      name: $(Name)
+    steps:
     - task: DockerCompose@0
       displayName: 'DockerCompose-push'
       inputs:
