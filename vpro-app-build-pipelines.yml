@@ -67,6 +67,14 @@ stages:
         sonarQubeRunAnalysis: true
         sqMavenPluginVersionChoice: 'latest'
         checkStyleRunAnalysis: true
+    
+    - task: SnykSecurityScan@1
+      inputs:
+        serviceConnectionEndpoint: 'snyke-connection'
+        testType: 'code'
+        failOnIssues: true
+        projectName: 'vproapp'
+        organization: 'sabir00001'
     - task: SonarQubeAnalyze@5
       condition: false
       inputs:
@@ -105,6 +113,8 @@ stages:
         action: 'Build services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
+    
+    
 
 - stage: Docker_Push
   displayName: 'Publish'
