@@ -12,7 +12,7 @@ variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '9734dba5-b9e0-4249-9973-b3fb22b06d24'
   imageRepository: 'vproapp'
-  containerRegistry: 'aksprodacr.azurecr.io'
+  containerRegistry: 'mafacr01.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/vpro-app/docker-compose.yaml'
   tag: '$(Build.BuildId)'
 
