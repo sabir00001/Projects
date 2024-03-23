@@ -15,9 +15,10 @@ variables:
   containerRegistry: 'mafacr01.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/vpro-app/docker-compose.yaml'
   tag: '$(Build.BuildId)'
-
+pool:
+  vmImage: ubuntu-latest
    # Agent VM image name
-  Name: devops-agent-01
+  #Name: devops-agent-01
 
 stages:
 - stage: App_Build
