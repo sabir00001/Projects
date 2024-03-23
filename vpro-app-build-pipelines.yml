@@ -72,7 +72,7 @@ stages:
         serviceConnectionEndpoint: 'snyke-connection'
         testType: 'code'
         failOnIssues: false
-        projectName: 'vproapp'
+        projectName: 'vproapp-code'
         organization: 'sabir00001'
     - task: SonarQubeAnalyze@5
       condition: false
