@@ -22,7 +22,7 @@ pool:
 
 stages:
 - stage: App_Build
-  displayName: 'Vpro_App_Build'
+  displayName: 'VproApp Build & Test'
   jobs:
   - job: Build
     displayName: Build
@@ -94,7 +94,7 @@ stages:
     
 
 - stage: Docker_Build
-  displayName: 'Docker Build'
+  displayName: 'Vprp Docker Image Build'
   jobs:
   - job: Build
     displayName: Build
@@ -125,7 +125,7 @@ stages:
       
 
 - stage: Docker_Push
-  displayName: 'Publish'
+  displayName: 'VproApp Publish acr'
   jobs:
   - job: Build
     displayName: publish
