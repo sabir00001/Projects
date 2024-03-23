@@ -112,23 +112,12 @@ stages:
         action: 'Build services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-    
-    - task: DockerCompose@0
-      displayName: 'DockerCompose-push'
-      inputs:
-        containerregistrytype: 'Azure Container Registry'
-        azureSubscription: 'azure-learn'
-        azureContainerRegistry: '{"loginServer":"mafacr01.azurecr.io", "id" : "/subscriptions/9734dba5-b9e0-4249-9973-b3fb22b06d24/resourceGroups/aks-rg-acr/providers/Microsoft.ContainerRegistry/registries/mafacr01"}'
-        dockerComposeFile: '$(dockerfilePath)'
-        projectName: 'vpro-app'
-        action: 'Push services'
-        additionalImageTags: '$(Build.BuildId)'
-        includeSourceTags: true
 
       
 
 - stage: Docker_Push
   displayName: 'VproApp Publish acr'
+  dependsOn: Docker_Build
   jobs:
   - job: Build
     displayName: publish
