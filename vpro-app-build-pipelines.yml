@@ -112,16 +112,6 @@ stages:
         action: 'Build services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-    - task: SnykSecurityScan@1
-      inputs:
-        serviceConnectionEndpoint: 'snyke-connection'
-        testType: 'container'
-        dockerImageName: 'vprofileapp'
-        dockerfilePath: 'vpro-app/Docker-files/app/Dockerfile'
-        monitorWhen: 'always'
-        failOnIssues: false
-        projectName: 'vprofileapp'
-        organization: 'sabir00001'
       
 
 - stage: Docker_Push
