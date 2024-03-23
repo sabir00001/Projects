@@ -26,8 +26,6 @@ stages:
   jobs:
   - job: Build
     displayName: Build
-    pool:
-      name: $(Name)
     steps:
     - task: SonarQubePrepare@5
       condition: false
