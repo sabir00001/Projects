@@ -99,7 +99,7 @@ stages:
   - job: Build
     displayName: Build
     pool:
-      name: $(Name)
+      vmImage: ubuntu-latest
     steps:
     - task: DockerCompose@0
       displayName: 'DockerCompose-build'
@@ -130,7 +130,7 @@ stages:
   - job: Build
     displayName: publish
     pool:
-      name: $(Name)
+      vmImage: ubuntu-latest
     steps:
     - task: DockerCompose@0
       displayName: 'DockerCompose-push'
