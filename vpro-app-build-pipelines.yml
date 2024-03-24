@@ -91,6 +91,7 @@ stages:
       inputs:
         pollingTimeoutSec: '300'
     
+    
 
 - stage: Docker_Build
   displayName: 'Vprp Docker Image Build'
@@ -109,8 +110,18 @@ stages:
         action: 'Build services'
         additionalImageTags: '$(Build.BuildId)'
         includeSourceTags: true
-
-      
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Write your commands here
+          pwd
+          ls -lart
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'vpro-apps'
+        publishLocation: 'Container'     
 
 - stage: Docker_Push
   displayName: 'VproApp Publish acr'
@@ -119,6 +130,12 @@ stages:
   - job: Build
     displayName: publish
     steps:
+    - checkout: none
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        buildType: 'current'
+        artifactName: 'vpro-apps'
+        targetPath: '$(Pipeline.Workspace)'
     - task: DockerCompose@0
       displayName: 'DockerCompose-push'
       inputs:
