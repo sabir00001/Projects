@@ -119,7 +119,7 @@ stages:
           ls -lart
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Pipeline.Workspace)/vpro-app'
+        PathtoPublish: '$(Pipeline.Workspace)/**/vpro-app'
         ArtifactName: 'vpro-apps'
         publishLocation: 'Container'
 
