@@ -119,9 +119,9 @@ stages:
           ls -lart
     - task: PublishBuildArtifacts@1
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        PathtoPublish: '$(Pipeline.Workspace)/vpro-app'
         ArtifactName: 'vpro-apps'
-        publishLocation: 'Container'     
+        publishLocation: 'Container'
 
 - stage: Docker_Push
   displayName: 'VproApp Publish acr'
